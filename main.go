@@ -24,6 +24,18 @@ func main() {
 
 	})
 
+	app.Post("/register", func(c *fiber.Ctx) error {
+
+		return nil
+
+	})
+
+	app.Post("/login", func(c *fiber.Ctx) error {
+
+		return nil
+
+	})
+
 	app.Listen(":8001")
 
 }
