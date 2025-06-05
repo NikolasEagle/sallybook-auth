@@ -26,8 +26,6 @@ func CheckConnection() {
 
 	db, err := sql.Open("postgres", psqlInfo)
 
-	fmt.Print(err)
-
 	if err != nil {
 
 		log.Fatal("Error opening connection to database")
@@ -38,6 +36,8 @@ func CheckConnection() {
 	defer db.Close()
 
 	err = db.Ping()
+
+	fmt.Print(err)
 
 	if err != nil {
 
