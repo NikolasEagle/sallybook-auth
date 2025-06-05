@@ -27,15 +27,19 @@ var (
 
 var psqlInfo string = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
-func CheckConnection() {
+func CheckConnection() error {
 
 	db, err := sql.Open("postgres", psqlInfo)
 
+	var msg string
+
 	if err != nil {
 
-		slog.Error("Error opening connection to database")
+		msg = "Error opening connection to database"
 
-		return
+		slog.Error(msg)
+
+		return fmt.Errorf("%s", msg)
 	}
 
 	defer db.Close()
@@ -44,11 +48,16 @@ func CheckConnection() {
 
 	if err != nil {
 
-		slog.Error("Error ping to database")
+		msg = "Error ping to database"
 
-		return
+		slog.Error(msg)
+
+		return fmt.Errorf("%s", msg)
+
 	}
 
 	slog.Info("Successfully connected to database!")
+
+	return nil
 
 }
