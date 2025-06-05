@@ -10,21 +10,25 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var host string = os.Getenv("POSTGRES_HOST")
+var (
+	host string = os.Getenv("POSTGRES_HOST")
 
-var port string = os.Getenv("POSTGRES_PORT")
+	port string = os.Getenv("POSTGRES_PORT")
 
-var user string = os.Getenv("POSTGRES_USER")
+	user string = os.Getenv("POSTGRES_USER")
 
-var password string = os.Getenv("POSTGRES_PASSWORD")
+	password string = os.Getenv("POSTGRES_PASSWORD")
 
-var dbname string = os.Getenv("POSTGRES_DB")
+	dbname string = os.Getenv("POSTGRES_DB")
+)
 
-var psqlInfo string = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+var psqlInfo string = fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable", host, user, password, dbname)
 
 func CheckConnection() {
 
 	db, err := sql.Open("postgres", psqlInfo)
+
+	fmt.Print(psqlInfo)
 
 	if err != nil {
 
