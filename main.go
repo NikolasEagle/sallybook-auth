@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log/slog"
 	"sallybook-auth/funcs/db"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +19,21 @@ func main() {
 
 	app.Get("/check", func(c *fiber.Ctx) error {
 
-		db.CheckConnection()
+		err := db.CheckConnection()
+
+		if err != nil {
+
+			c.Status(502).SendString(err.Error())
+
+			return err
+
+		}
+
+		msg := "Successfully connected to database!"
+
+		slog.Info(msg)
+
+		c.Status(200).SendString(msg)
 
 		return nil
 

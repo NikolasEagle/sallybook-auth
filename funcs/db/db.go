@@ -56,8 +56,6 @@ func CheckConnection() error {
 
 	}
 
-	slog.Info("Successfully connected to database!")
-
 	return nil
 
 }
