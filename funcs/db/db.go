@@ -59,3 +59,42 @@ func CheckConnection() error {
 	return nil
 
 }
+
+func CheckPresenceUser(email string) error {
+
+	db, err := sql.Open("postgres", psqlInfo)
+
+	var msg string
+
+	if err != nil {
+
+		msg = "Error opening connection to database"
+
+		slog.Error(msg)
+
+		return fmt.Errorf("%s", msg)
+	}
+
+	defer db.Close()
+
+	query := fmt.Sprintf(`SELECT first_name, second_name FROM users WHERE email = "%s"`, email)
+
+	rows, err := db.Query(query)
+
+	if err != nil {
+
+		msg = "Error selecting data from database"
+
+		slog.Error(msg)
+
+		return fmt.Errorf("%s", msg)
+
+	}
+
+	defer rows.Close()
+
+	fmt.Print(rows)
+
+	return nil
+
+}
