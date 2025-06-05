@@ -1,7 +1,7 @@
 package main
 
 import (
-	db "sallybook-auth/funcs"
+	db "sallybook-auth/funcs/db"
 
 	"github.com/gofiber/fiber/v2"
 )
