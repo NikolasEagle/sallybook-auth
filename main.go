@@ -1,6 +1,10 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	db "sallybook-auth/funcs"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
 
@@ -9,6 +13,14 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 
 		return c.SendString("SallyBook")
+
+	})
+
+	app.Get("/check", func(c *fiber.Ctx) error {
+
+		db.CheckConnection()
+
+		return nil
 
 	})
 

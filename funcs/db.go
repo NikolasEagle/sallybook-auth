@@ -6,6 +6,8 @@ import (
 	"log"
 	"log/slog"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 var host string = os.Getenv("POSTGRES_HOST")
@@ -23,6 +25,8 @@ var psqlInfo string = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s
 func CheckConnection() {
 
 	db, err := sql.Open("postgres", psqlInfo)
+
+	fmt.Print(err)
 
 	if err != nil {
 
