@@ -146,7 +146,7 @@ func CheckPresenceUser(email string) (bool, error) {
 
 }
 
-func CreateUser(user *structs.User) error {
+func CreateUser(firstName, secondName, email, password string) error {
 
 	_, err := CheckConnection()
 
