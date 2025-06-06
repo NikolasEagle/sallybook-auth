@@ -120,7 +120,7 @@ func CheckPresenceUser(email string) (bool, error) {
 
 		user := structs.User{}
 
-		err := rows.Scan(&user.Email)
+		err := rows.Scan(&user.FirstName, &user.SecondName)
 
 		if err != nil {
 

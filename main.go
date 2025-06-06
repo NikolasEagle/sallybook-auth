@@ -83,6 +83,10 @@ func main() {
 
 		default:
 
+			msg = fmt.Sprintf("%s hasn't registered", user.Email)
+
+			c.Status(201).SendString(msg)
+
 			return nil
 
 		}
