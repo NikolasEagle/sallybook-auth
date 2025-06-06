@@ -176,9 +176,9 @@ func CreateUser(firstName, secondName, email, password string) (string, error) {
 
 	hash, _ := pw.HashPassword(password)
 
-	query := fmt.Sprintf(`INSERT INTO users VALUES ('%s', '%s', '%s', '%s', '%s') RETURNING email`, id, firstName, secondName, email, hash)
+	query := fmt.Sprintf(`INSERT INTO users VALUES ('%s', '%s', '%s', '%s', '%s')`, id, firstName, secondName, email, hash)
 
-	_, err = db.Query(query)
+	rows, err := db.Query(query)
 
 	if err != nil {
 
@@ -189,6 +189,8 @@ func CreateUser(firstName, secondName, email, password string) (string, error) {
 		return "", fmt.Errorf("%s", msg)
 
 	}
+
+	defer rows.Close()
 
 	return email, nil
 

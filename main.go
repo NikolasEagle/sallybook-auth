@@ -63,7 +63,7 @@ func main() {
 
 		if err != nil {
 
-			slog.Error(err.Error())
+			c.Status(502).SendString(err.Error())
 
 			return err
 
@@ -75,15 +75,27 @@ func main() {
 
 			msg = fmt.Sprintf("%s has already registered", user.Email)
 
-			c.Status(409).SendString(msg)
-
 			slog.Error(msg)
+
+			c.Status(409).SendString(msg)
 
 			return err
 
 		default:
 
-			msg = fmt.Sprintf("%s hasn't registered", user.Email)
+			email, err := db.CreateUser(user.FirstName, user.SecondName, user.Email, user.Password)
+
+			if err != nil {
+
+				c.Status(502).SendString(err.Error())
+
+				return err
+
+			}
+
+			msg := fmt.Sprintf("Email %s was successfully registered", email)
+
+			slog.Info(msg)
 
 			c.Status(201).SendString(msg)
 
