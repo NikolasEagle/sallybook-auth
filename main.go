@@ -109,15 +109,13 @@ func main() {
 
 	app.Post("/login", func(c *fiber.Ctx) error {
 
-		var msg string
-
 		user := new(structs.User)
 
 		err := c.BodyParser(user)
 
 		if err != nil {
 
-			msg = "Error converting form data to struct"
+			msg := "Error converting form data to struct"
 
 			slog.Error(msg)
 
@@ -139,9 +137,39 @@ func main() {
 
 		case true:
 
+			correctPassword, err := db.CheckPassword(user.Email, user.Password)
+
+			if err != nil {
+
+				c.Status(502).SendString(err.Error())
+
+				return err
+
+			}
+
+			if correctPassword {
+
+				msg := fmt.Sprintf("Email %s was successfuly login", user.Email)
+
+				slog.Info(msg)
+
+				c.Status(200).SendString(msg)
+
+				return nil
+
+			}
+
+			msg := "Password isn't corrected"
+
+			slog.Error(msg)
+
+			c.Status(401).SendString(msg)
+
+			return err
+
 		default:
 
-			msg = fmt.Sprintf("Email %s isn't registered", user.Email)
+			msg := fmt.Sprintf("Email %s isn't registered", user.Email)
 
 			slog.Error(msg)
 
