@@ -1,6 +1,10 @@
 package convert
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/mitchellh/mapstructure"
+)
 
 func GetEnvAsInt(value string) int {
 
@@ -20,8 +24,12 @@ type User struct {
 	Password string
 }
 
-/*func GetUserStruct(data map[string]string) User {
+func GetUserStruct(data map[string]string) User {
 
+	var user User
 
+	mapstructure.Decode(data, &user)
 
-}*/
+	return user
+
+}
