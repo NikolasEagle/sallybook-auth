@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"sallybook-auth/funcs/convert"
+	"sallybook-auth/structs"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -73,7 +74,7 @@ func CheckConnection() (*sql.DB, error) {
 
 }
 
-func CheckPresenceUser(email string) error {
+func CheckPresenceUser(email string) (bool, error) {
 
 	_, err := CheckConnection()
 
@@ -81,7 +82,7 @@ func CheckPresenceUser(email string) error {
 
 		slog.Error(err.Error())
 
-		return err
+		return false, err
 
 	}
 
@@ -91,7 +92,7 @@ func CheckPresenceUser(email string) error {
 
 		slog.Error(err.Error())
 
-		return err
+		return false, err
 
 	}
 
@@ -107,12 +108,40 @@ func CheckPresenceUser(email string) error {
 
 		slog.Error(msg)
 
-		return fmt.Errorf("%s", msg)
+		return false, fmt.Errorf("%s", msg)
 
 	}
 
 	defer rows.Close()
 
-	return nil
+	users := []structs.User{}
+
+	for rows.Next() {
+
+		user := structs.User{}
+
+		err := rows.Scan(&user.Email)
+
+		if err != nil {
+
+			msg := "Error scanning row from database"
+
+			slog.Error(msg)
+
+			continue
+
+		}
+
+		users = append(users, user)
+
+	}
+
+	if len(users) > 0 {
+
+		return true, nil
+
+	}
+
+	return false, nil
 
 }

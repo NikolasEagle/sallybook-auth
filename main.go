@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"sallybook-auth/funcs/db"
 	"sallybook-auth/structs"
@@ -42,13 +43,15 @@ func main() {
 
 	app.Post("/register", func(c *fiber.Ctx) error {
 
+		var msg string
+
 		user := new(structs.User)
 
 		err := c.BodyParser(user)
 
 		if err != nil {
 
-			msg := "Error converting form data to struct"
+			msg = "Error converting form data to struct"
 
 			slog.Error(msg)
 
@@ -56,9 +59,33 @@ func main() {
 
 		}
 
-		err = db.CheckPresenceUser(user.Email)
+		HasUser, err := db.CheckPresenceUser(user.Email)
 
-		return err
+		if err != nil {
+
+			slog.Error(err.Error())
+
+			return err
+
+		}
+
+		switch HasUser {
+
+		case true:
+
+			return nil
+
+		default:
+
+			msg = fmt.Sprintf("%s has already registered", user.Email)
+
+			c.Status(409).SendString(msg)
+
+			slog.Error(msg)
+
+			return err
+
+		}
 
 	})
 
