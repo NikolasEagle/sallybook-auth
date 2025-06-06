@@ -55,6 +55,8 @@ func main() {
 
 			slog.Error(msg)
 
+			c.Status(502)
+
 			return err
 
 		}
@@ -107,7 +109,47 @@ func main() {
 
 	app.Post("/login", func(c *fiber.Ctx) error {
 
-		return nil
+		var msg string
+
+		user := new(structs.User)
+
+		err := c.BodyParser(user)
+
+		if err != nil {
+
+			msg = "Error converting form data to struct"
+
+			slog.Error(msg)
+
+			return err
+
+		}
+
+		HasEmail, err := db.CheckPresenceUser(user.Email)
+
+		if err != nil {
+
+			c.Status(502).SendString(err.Error())
+
+			return err
+
+		}
+
+		switch HasEmail {
+
+		case true:
+
+		default:
+
+			msg = fmt.Sprintf("Email %s isn't registered", user.Email)
+
+			slog.Error(msg)
+
+			c.Status(401).SendString(msg)
+
+			return err
+
+		}
 
 	})
 
