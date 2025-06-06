@@ -9,3 +9,19 @@ func GetEnvAsInt(value string) int {
 	return res
 
 }
+
+type User struct {
+	FirstName string
+
+	SecondName string
+
+	Email string
+
+	Password string
+}
+
+/*func GetUserStruct(data map[string]string) User {
+
+
+
+}*/
