@@ -195,3 +195,65 @@ func CreateUser(firstName, secondName, email, password string) (string, error) {
 	return email, nil
 
 }
+
+func CheckPassword(email, password string) (bool, error) {
+
+	_, err := CheckConnection()
+
+	if err != nil {
+
+		return false, err
+
+	}
+
+	db, err := OpenConnection()
+
+	if err != nil {
+
+		return false, err
+
+	}
+
+	defer db.Close()
+
+	query := fmt.Sprintf("SELECT hash FROM users WHERE email='%s'", email)
+
+	rows, err := db.Query(query)
+
+	if err != nil {
+
+		msg := "Error selecting data from database"
+
+		slog.Error(msg)
+
+		return false, fmt.Errorf("%s", msg)
+
+	}
+
+	defer rows.Close()
+
+	users := []structs.User{}
+
+	for rows.Next() {
+
+		user := structs.User{}
+
+		err := rows.Scan(&user.Hash)
+
+		if err != nil {
+
+			slog.Error(err.Error())
+
+			continue
+
+		}
+
+		users = append(users, user)
+
+	}
+
+	correctPassword := pw.CheckPasswordHash(password, users[0].Hash)
+
+	return correctPassword, nil
+
+}
