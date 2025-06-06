@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"sallybook-auth/funcs/db"
+	"sallybook-auth/structs"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -39,23 +40,17 @@ func main() {
 
 	})
 
-	type User struct {
-		FirstName string `form:"first_name"`
-
-		SecondName string `form:"second_name"`
-
-		Email string `form:"email"`
-
-		Password string `form:"password"`
-	}
-
 	app.Post("/register", func(c *fiber.Ctx) error {
 
-		user := new(User)
+		user := new(structs.User)
 
 		err := c.BodyParser(user)
 
 		if err != nil {
+
+			msg := "Error converting form data to struct"
+
+			slog.Error(msg)
 
 			return err
 
