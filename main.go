@@ -19,7 +19,7 @@ func main() {
 
 	app.Get("/check", func(c *fiber.Ctx) error {
 
-		err := db.CheckConnection()
+		_, err := db.CheckConnection()
 
 		if err != nil {
 
