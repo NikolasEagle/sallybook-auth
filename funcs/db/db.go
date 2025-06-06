@@ -27,19 +27,32 @@ var (
 
 var psqlInfo string = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
-func CheckConnection() error {
+func OpenConnection() (*sql.DB, error) {
 
 	db, err := sql.Open("postgres", psqlInfo)
 
-	var msg string
-
 	if err != nil {
 
-		msg = "Error opening connection to database"
+		msg := "Error opening connection to database"
 
 		slog.Error(msg)
 
-		return fmt.Errorf("%s", msg)
+		return nil, fmt.Errorf("%s", msg)
+	}
+
+	return db, nil
+
+}
+
+func CheckConnection() (*sql.DB, error) {
+
+	db, err := OpenConnection()
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return nil, err
 	}
 
 	defer db.Close()
@@ -48,31 +61,38 @@ func CheckConnection() error {
 
 	if err != nil {
 
-		msg = "Error ping to database"
+		msg := "Error ping to database"
 
 		slog.Error(msg)
 
-		return fmt.Errorf("%s", msg)
+		return nil, fmt.Errorf("%s", msg)
 
 	}
 
-	return nil
+	return db, nil
 
 }
 
 func CheckPresenceUser(email string) error {
 
-	db, err := sql.Open("postgres", psqlInfo)
-
-	var msg string
+	_, err := CheckConnection()
 
 	if err != nil {
 
-		msg = "Error opening connection to database"
+		slog.Error(err.Error())
 
-		slog.Error(msg)
+		return err
 
-		return fmt.Errorf("%s", msg)
+	}
+
+	db, err := OpenConnection()
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return err
+
 	}
 
 	defer db.Close()
@@ -83,7 +103,7 @@ func CheckPresenceUser(email string) error {
 
 	if err != nil {
 
-		msg = "Error selecting data from database"
+		msg := "Error selecting data from database"
 
 		slog.Error(msg)
 
