@@ -36,11 +36,9 @@ func OpenConnection() (*sql.DB, error) {
 
 	if err != nil {
 
-		msg := "Error opening connection to database"
+		slog.Error(err.Error())
 
-		slog.Error(msg)
-
-		return nil, fmt.Errorf("%s", msg)
+		return nil, fmt.Errorf("%s", "Error opening connection to database")
 	}
 
 	return db, nil
@@ -53,8 +51,6 @@ func CheckConnection() (*sql.DB, error) {
 
 	if err != nil {
 
-		slog.Error(err.Error())
-
 		return nil, err
 	}
 
@@ -64,11 +60,9 @@ func CheckConnection() (*sql.DB, error) {
 
 	if err != nil {
 
-		msg := "Error ping to database"
+		slog.Error(err.Error())
 
-		slog.Error(msg)
-
-		return nil, fmt.Errorf("%s", msg)
+		return nil, fmt.Errorf("%s", "Error ping to database")
 
 	}
 
@@ -82,8 +76,6 @@ func CheckPresenceUser(email string) (bool, error) {
 
 	if err != nil {
 
-		slog.Error(err.Error())
-
 		return false, err
 
 	}
@@ -92,25 +84,23 @@ func CheckPresenceUser(email string) (bool, error) {
 
 	if err != nil {
 
-		slog.Error(err.Error())
-
 		return false, err
 
 	}
 
 	defer db.Close()
 
-	query := fmt.Sprintf(`SELECT first_name, second_name FROM users WHERE email='%s'`, email)
+	query := fmt.Sprintf(`SELECT id FROM users WHERE email='%s'`, email)
 
 	rows, err := db.Query(query)
 
+	fmt.Print(rows)
+
 	if err != nil {
 
-		msg := "Error selecting data from database"
+		slog.Error(err.Error())
 
-		slog.Error(msg)
-
-		return false, fmt.Errorf("%s", msg)
+		return false, fmt.Errorf("%s", "Error selecting data from database")
 
 	}
 
@@ -122,7 +112,7 @@ func CheckPresenceUser(email string) (bool, error) {
 
 		user := structs.User{}
 
-		err := rows.Scan(&user.FirstName, &user.SecondName)
+		err := rows.Scan(&user.Id)
 
 		if err != nil {
 
@@ -138,13 +128,7 @@ func CheckPresenceUser(email string) (bool, error) {
 
 	}
 
-	if len(users) > 0 {
-
-		return true, nil
-
-	}
-
-	return false, nil
+	return len(users) > 0, nil
 
 }
 
@@ -154,8 +138,6 @@ func CreateUser(firstName, secondName, email, password string) (string, error) {
 
 	if err != nil {
 
-		slog.Error(err.Error())
-
 		return "", err
 
 	}
@@ -163,8 +145,6 @@ func CreateUser(firstName, secondName, email, password string) (string, error) {
 	db, err := OpenConnection()
 
 	if err != nil {
-
-		slog.Error(err.Error())
 
 		return "", err
 
@@ -182,11 +162,9 @@ func CreateUser(firstName, secondName, email, password string) (string, error) {
 
 	if err != nil {
 
-		msg := "Error creating data into database"
+		slog.Error(err.Error())
 
-		slog.Error(msg)
-
-		return "", fmt.Errorf("%s", msg)
+		return "", fmt.Errorf("%s", "Error creating data into database")
 
 	}
 
@@ -222,11 +200,9 @@ func CheckPassword(email, password string) (bool, error) {
 
 	if err != nil {
 
-		msg := "Error selecting data from database"
+		slog.Error(err.Error())
 
-		slog.Error(msg)
-
-		return false, fmt.Errorf("%s", msg)
+		return false, fmt.Errorf("%s", "Error selecting data from database")
 
 	}
 
