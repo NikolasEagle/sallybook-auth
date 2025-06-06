@@ -73,10 +73,6 @@ func main() {
 
 		case true:
 
-			return nil
-
-		default:
-
 			msg = fmt.Sprintf("%s has already registered", user.Email)
 
 			c.Status(409).SendString(msg)
@@ -84,6 +80,10 @@ func main() {
 			slog.Error(msg)
 
 			return err
+
+		default:
+
+			return nil
 
 		}
 
