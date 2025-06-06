@@ -145,3 +145,31 @@ func CheckPresenceUser(email string) (bool, error) {
 	return false, nil
 
 }
+
+func CreateUser(user *structs.User) error {
+
+	_, err := CheckConnection()
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return err
+
+	}
+
+	db, err := OpenConnection()
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return err
+
+	}
+
+	defer db.Close()
+
+	return nil
+
+}
