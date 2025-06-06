@@ -43,25 +43,21 @@ func main() {
 
 	app.Post("/register", func(c *fiber.Ctx) error {
 
-		var msg string
-
 		user := new(structs.User)
 
 		err := c.BodyParser(user)
 
 		if err != nil {
 
-			msg = "Error converting form data to struct"
+			slog.Error("Error converting form data to struct")
 
-			slog.Error(msg)
-
-			c.Status(502)
+			c.Status(502).SendString("Error data processing")
 
 			return err
 
 		}
 
-		HasUser, err := db.CheckPresenceUser(user.Email)
+		hasUser, err := db.CheckPresenceUser(user.Email)
 
 		if err != nil {
 
@@ -71,11 +67,11 @@ func main() {
 
 		}
 
-		switch HasUser {
+		switch hasUser {
 
 		case true:
 
-			msg = fmt.Sprintf("%s has already registered", user.Email)
+			msg := fmt.Sprintf("%s has already registered", user.Email)
 
 			slog.Error(msg)
 
@@ -115,15 +111,15 @@ func main() {
 
 		if err != nil {
 
-			msg := "Error converting form data to struct"
+			slog.Error("Error converting form data to struct")
 
-			slog.Error(msg)
+			c.Status(502).SendString("Error data processing")
 
 			return err
 
 		}
 
-		HasEmail, err := db.CheckPresenceUser(user.Email)
+		correctEmail, err := db.CheckPresenceUser(user.Email)
 
 		if err != nil {
 
@@ -133,7 +129,7 @@ func main() {
 
 		}
 
-		switch HasEmail {
+		switch correctEmail {
 
 		case true:
 
