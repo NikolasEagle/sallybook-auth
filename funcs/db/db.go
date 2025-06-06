@@ -6,6 +6,8 @@ import (
 	"log/slog"
 	"os"
 	"sallybook-auth/funcs/convert"
+	"sallybook-auth/funcs/pw"
+	"sallybook-auth/funcs/uuid"
 	"sallybook-auth/structs"
 
 	"github.com/joho/godotenv"
@@ -146,7 +148,7 @@ func CheckPresenceUser(email string) (bool, error) {
 
 }
 
-func CreateUser(firstName, secondName, email, password string) error {
+func CreateUser(firstName, secondName, email, password string) (string, error) {
 
 	_, err := CheckConnection()
 
@@ -154,7 +156,7 @@ func CreateUser(firstName, secondName, email, password string) error {
 
 		slog.Error(err.Error())
 
-		return err
+		return "", err
 
 	}
 
@@ -164,12 +166,30 @@ func CreateUser(firstName, secondName, email, password string) error {
 
 		slog.Error(err.Error())
 
-		return err
+		return "", err
 
 	}
 
 	defer db.Close()
 
-	return nil
+	id := uuid.GetUUID()
+
+	hash, _ := pw.HashPassword(password)
+
+	query := fmt.Sprintf(`INSERT INTO users VALUES ('%s', '%s', '%s', '%s', '%s') RETURNING email`, id, firstName, secondName, email, hash)
+
+	_, err = db.Query(query)
+
+	if err != nil {
+
+		msg := "Error creating data into database"
+
+		slog.Error(msg)
+
+		return "", fmt.Errorf("%s", msg)
+
+	}
+
+	return email, nil
 
 }
