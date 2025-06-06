@@ -39,9 +39,31 @@ func main() {
 
 	})
 
+	type User struct {
+		FirstName string `form:"first_name"`
+
+		SecondName string `form:"second_name"`
+
+		Email string `form:"email"`
+
+		Password string `form:"password"`
+	}
+
 	app.Post("/register", func(c *fiber.Ctx) error {
 
-		return nil
+		user := new(User)
+
+		err := c.BodyParser(user)
+
+		if err != nil {
+
+			return err
+
+		}
+
+		err = db.CheckPresenceUser(user.Email)
+
+		return err
 
 	})
 

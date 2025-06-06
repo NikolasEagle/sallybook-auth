@@ -97,7 +97,7 @@ func CheckPresenceUser(email string) error {
 
 	defer db.Close()
 
-	query := fmt.Sprintf(`SELECT first_name, second_name FROM users WHERE email = "%s"`, email)
+	query := fmt.Sprintf(`SELECT first_name, second_name FROM users WHERE email='%s'`, email)
 
 	rows, err := db.Query(query)
 
@@ -112,8 +112,6 @@ func CheckPresenceUser(email string) error {
 	}
 
 	defer rows.Close()
-
-	fmt.Print(rows)
 
 	return nil
 
