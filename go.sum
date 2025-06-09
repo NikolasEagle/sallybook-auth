@@ -8,6 +8,8 @@ github.com/go-redis/redis v6.15.9+incompatible h1:K0pv1D7EQUjfyoMql+r/jZqCLizCGK
 github.com/go-redis/redis v6.15.9+incompatible/go.mod h1:NAIEuMOZ/fxfXJIrKDQDz8wamY7mA7PouImQ2Jvg6kA=
 github.com/gofiber/fiber/v2 v2.52.8 h1:xl4jJQ0BV5EJTA2aWiKw/VddRpHrKeZLF0QPUxqn0x4=
 github.com/gofiber/fiber/v2 v2.52.8/go.mod h1:YEcBbO/FB+5M1IZNBP9FO3J9281zgPAreiI1oqg8nDw=
+github.com/gofiber/storage/redis/v2 v2.0.3 h1:X/miioVi4OMn5QK3fpfownSm617uUTpycJGrjR5goSo=
+github.com/gofiber/storage/redis/v2 v2.0.3/go.mod h1:Qr0p2kHbkLLHWSDwxxRBVqmJWuhlDkVnCArpqD0I8No=
 github.com/gofiber/storage/redis/v3 v3.2.0 h1:1cmxmH6ZniZcWHvMpp6LzfcSK5o7CgqiouRqrVCNY9A=
 github.com/gofiber/storage/redis/v3 v3.2.0/go.mod h1:fffHK3QnjOxOUZGtq08YVNU1lqKvE+pAKJ5roSnM7FE=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
