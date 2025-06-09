@@ -13,3 +13,7 @@ type User struct {
 
 	Hash string
 }
+
+type SessionStore struct {
+	Email string
+}
