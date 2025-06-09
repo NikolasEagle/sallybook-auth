@@ -246,6 +246,12 @@ func main() {
 
 	})
 
+	app.Post("/check_auth", func(c *fiber.Ctx) error {
+
+		return nil
+
+	})
+
 	app.Post("/logout", func(c *fiber.Ctx) error {
 
 		return nil
