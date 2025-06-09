@@ -238,6 +238,12 @@ func main() {
 
 	})
 
+	app.Post("/logout", func(c *fiber.Ctx) error {
+
+		return nil
+
+	})
+
 	app.Listen(":8001")
 
 }
