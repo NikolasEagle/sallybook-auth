@@ -24,15 +24,15 @@ var (
 
 var ctx = context.Background()
 
+var client *redis.Client = redis.NewClient(&redis.Options{
+
+	Addr: fmt.Sprintf("%s:%s", host, port),
+
+	Password: password,
+
+	DB: db,
+})
+
 func CheckConnection() {
-
-	client := redis.NewClient(&redis.Options{
-
-		Addr: fmt.Sprintf("%s:%s", host, port),
-
-		Password: password,
-
-		DB: db,
-	})
 
 }
