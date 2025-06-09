@@ -134,6 +134,106 @@ func main() {
 
 		}
 
+		user := new(structs.User)
+
+		err = c.BodyParser(user)
+
+		if err != nil {
+
+			slog.Error("Error converting form data to struct")
+
+			c.Status(502).SendString("Error data processing")
+
+			return err
+
+		}
+
+		correctEmail, err := db.CheckPresenceUser(user.Email)
+
+		if err != nil {
+
+			c.Status(502).SendString(err.Error())
+
+			return err
+
+		}
+
+		switch correctEmail {
+
+		case true:
+
+			correctPassword, err := db.CheckPassword(user.Email, user.Password)
+
+			if err != nil {
+
+				c.Status(502).SendString(err.Error())
+
+				return err
+
+			}
+
+			if correctPassword {
+
+				sess.Set("email", user.Email)
+
+				err := sess.Save()
+
+				if err != nil {
+
+					slog.Error(fmt.Sprintf("Error saving session for %s", user.Email))
+
+					c.Status(502).SendString("Error creating session")
+
+					return err
+
+				}
+
+				msg := fmt.Sprintf("Email %s was successfuly login", user.Email)
+
+				slog.Info(msg)
+
+				c.Status(200).SendString(msg)
+
+				return nil
+
+			}
+
+			msg := "Password isn't corrected"
+
+			slog.Error(msg)
+
+			c.Status(401).SendString(msg)
+
+			return nil
+
+		default:
+
+			msg := fmt.Sprintf("Email %s isn't registered", user.Email)
+
+			slog.Error(msg)
+
+			c.Status(401).SendString(msg)
+
+			return nil
+
+		}
+
+	})
+
+	app.Post("/check_auth", func(c *fiber.Ctx) error {
+
+		sess, err := store.Get(c)
+
+		if err != nil {
+
+			slog.Error("Error initialization session storage")
+
+			c.Status(502).SendString("Error data processing")
+
+			return err
+
+		}
+
 		hasSession, err := redis_store.GetValue(sess.ID())
 
 		if err != nil {
@@ -148,89 +248,13 @@ func main() {
 
 		case "none":
 
-			user := new(structs.User)
+			msg := fmt.Sprintf("Email %s wasn't login", sess.Get("email"))
 
-			err = c.BodyParser(user)
+			slog.Error(msg)
 
-			if err != nil {
+			c.Status(401).SendString(msg)
 
-				slog.Error("Error converting form data to struct")
-
-				c.Status(502).SendString("Error data processing")
-
-				return err
-
-			}
-
-			correctEmail, err := db.CheckPresenceUser(user.Email)
-
-			if err != nil {
-
-				c.Status(502).SendString(err.Error())
-
-				return err
-
-			}
-
-			switch correctEmail {
-
-			case true:
-
-				correctPassword, err := db.CheckPassword(user.Email, user.Password)
-
-				if err != nil {
-
-					c.Status(502).SendString(err.Error())
-
-					return err
-
-				}
-
-				if correctPassword {
-
-					sess.Set("email", user.Email)
-
-					err := sess.Save()
-
-					if err != nil {
-
-						slog.Error(fmt.Sprintf("Error saving session for %s", user.Email))
-
-						c.Status(502).SendString("Error creating session")
-
-						return err
-
-					}
-
-					msg := fmt.Sprintf("Email %s was successfuly login", user.Email)
-
-					slog.Info(msg)
-
-					c.Status(200).SendString(msg)
-
-					return nil
-
-				}
-
-				msg := "Password isn't corrected"
-
-				slog.Error(msg)
-
-				c.Status(401).SendString(msg)
-
-				return err
-
-			default:
-
-				msg := fmt.Sprintf("Email %s isn't registered", user.Email)
-
-				slog.Error(msg)
-
-				c.Status(401).SendString(msg)
-
-				return err
-
-			}
+			return nil
 
 		default:
 
@@ -243,12 +267,6 @@ func main() {
 			return nil
 
 		}
-
-	})
-
-	app.Post("/check_auth", func(c *fiber.Ctx) error {
-
-		return nil
 
 	})
 
