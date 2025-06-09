@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"os"
 	"sallybook-auth/funcs/db"
 	"sallybook-auth/funcs/redis_store"
 	"sallybook-auth/structs"
@@ -11,7 +12,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/fiber/v2/utils"
+	"github.com/joho/godotenv"
 )
+
+var _ = godotenv.Load()
 
 func main() {
 
@@ -300,6 +304,6 @@ func main() {
 
 	})
 
-	app.Listen(":8001")
+	app.Listen(os.Getenv("PORT_SERVER_AUTH"))
 
 }
