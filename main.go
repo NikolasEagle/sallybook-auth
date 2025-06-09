@@ -4,14 +4,27 @@ import (
 	"fmt"
 	"log/slog"
 	"sallybook-auth/funcs/db"
+	"sallybook-auth/funcs/redis_store"
 	"sallybook-auth/structs"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/gofiber/storage/redis/v2"
 )
 
 func main() {
 
 	app := fiber.New()
+
+	storage := redis.New(redis.Config{
+
+		ClientName: redis_store.Client.String(),
+	})
+
+	store := session.New(session.Config{
+
+		Storage: storage,
+	})
 
 	app.Get("/", func(c *fiber.Ctx) error {
 
