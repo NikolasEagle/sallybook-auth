@@ -94,8 +94,6 @@ func CheckPresenceUser(email string) (bool, error) {
 
 	rows, err := db.Query(query)
 
-	fmt.Print(rows)
-
 	if err != nil {
 
 		slog.Error(err.Error())

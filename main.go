@@ -11,17 +11,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/fiber/v2/utils"
-	"github.com/gofiber/storage/redis/v2"
 )
 
 func main() {
 
 	app := fiber.New()
 
-	storage := redis.New(redis.Config{
-
-		ClientName: redis_store.Client.String(),
-	})
+	storage := redis_store.Store
 
 	store := session.New(session.Config{
 
@@ -152,9 +148,9 @@ func main() {
 
 		}
 
-		hasSessionId := sess.Get("cookie:session_id")
+		hasSession := sess.Get("email")
 
-		switch hasSessionId {
+		switch hasSession {
 
 		case nil:
 
@@ -183,6 +179,20 @@ func main() {
 				}
 
 				if correctPassword {
+
+					sess.Set("email", user.Email)
+
+					err := sess.Save()
+
+					if err != nil {
+
+						slog.Error(fmt.Sprintf("Error saving session for %s", user.Email))
+
+						c.Status(502).SendString("Error creating session")
+
+						return err
+
+					}
 
 					msg := fmt.Sprintf("Email %s was successfuly login", user.Email)
 

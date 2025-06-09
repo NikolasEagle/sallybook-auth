@@ -7,6 +7,7 @@ import (
 	"os"
 	"sallybook-auth/funcs/convert"
 
+	redis_fiber "github.com/gofiber/storage/redis/v2"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 )
@@ -32,6 +33,19 @@ var Client *redis.Client = redis.NewClient(&redis.Options{
 	Password: password,
 
 	DB: db,
+})
+
+var Store = redis_fiber.New(redis_fiber.Config{
+
+	Host: host,
+
+	Port: convert.GetEnvAsInt(port),
+
+	Username: "",
+
+	Password: password,
+
+	Database: db,
 })
 
 func CheckConnection() error {
