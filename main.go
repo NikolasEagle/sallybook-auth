@@ -134,13 +134,9 @@ func main() {
 
 		}
 
-		user := new(structs.User)
-
-		err = c.BodyParser(user)
+		hasSession, err := redis_store.GetValue(sess.ID())
 
 		if err != nil {
-
-			slog.Error("Error converting form data to struct")
 
 			c.Status(502).SendString("Error data processing")
 
@@ -148,11 +144,23 @@ func main() {
 
 		}
 
-		hasSession := sess.Get("email")
-
 		switch hasSession {
 
-		case nil:
+		case "none":
+
+			user := new(structs.User)
+
+			err = c.BodyParser(user)
+
+			if err != nil {
+
+				slog.Error("Error converting form data to struct")
+
+				c.Status(502).SendString("Error data processing")
+
+				return err
+
+			}
 
 			correctEmail, err := db.CheckPresenceUser(user.Email)
 
@@ -226,7 +234,7 @@ func main() {
 
 		default:
 
-			msg := fmt.Sprintf("Email %s was successfuly login", user.Email)
+			msg := fmt.Sprintf("Email %s was successfuly login", sess.Get("email"))
 
 			slog.Info(msg)
 

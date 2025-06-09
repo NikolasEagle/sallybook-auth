@@ -80,8 +80,6 @@ func GetValue(key string) (string, error) {
 
 	if err == redis.Nil {
 
-		slog.Error(err.Error())
-
 		return "none", nil
 
 	} else if err != nil {
