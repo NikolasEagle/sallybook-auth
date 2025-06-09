@@ -25,7 +25,7 @@ var (
 
 var ctx = context.Background()
 
-var client *redis.Client = redis.NewClient(&redis.Options{
+var Client *redis.Client = redis.NewClient(&redis.Options{
 
 	Addr: fmt.Sprintf("%s:%s", host, port),
 
@@ -36,7 +36,7 @@ var client *redis.Client = redis.NewClient(&redis.Options{
 
 func CheckConnection() error {
 
-	_, err := client.Ping(ctx).Result()
+	_, err := Client.Ping(ctx).Result()
 
 	if err != nil {
 
