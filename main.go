@@ -6,9 +6,11 @@ import (
 	"sallybook-auth/funcs/db"
 	"sallybook-auth/funcs/redis_store"
 	"sallybook-auth/structs"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/gofiber/fiber/v2/utils"
 	"github.com/gofiber/storage/redis/v2"
 )
 
@@ -24,6 +26,12 @@ func main() {
 	store := session.New(session.Config{
 
 		Storage: storage,
+
+		Expiration: 7 * 24 * time.Hour,
+
+		KeyLookup: "cookie:session_id",
+
+		KeyGenerator: utils.UUIDv4,
 	})
 
 	app.Get("/", func(c *fiber.Ctx) error {
