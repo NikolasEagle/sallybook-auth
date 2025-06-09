@@ -3,11 +3,12 @@ package redis
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"sallybook-auth/funcs/convert"
 
 	"github.com/joho/godotenv"
-	"github.com/redis/go-redis"
+	"github.com/redis/go-redis/v9"
 )
 
 var _ = godotenv.Load()
@@ -33,6 +34,20 @@ var client *redis.Client = redis.NewClient(&redis.Options{
 	DB: db,
 })
 
-func CheckConnection() {
+func CheckConnection() error {
+
+	_, err := client.Ping(ctx).Result()
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return fmt.Errorf("%s", "Error connecting to redis-store")
+
+	}
+
+	slog.Info("Successfully connected to redis-store!")
+
+	return nil
 
 }
