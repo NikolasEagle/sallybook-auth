@@ -78,14 +78,22 @@ func GetValue(key string) (string, error) {
 
 	val, err := Client.Get(ctx, key).Result()
 
-	if err == redis.Nil || err != nil {
+	if err == redis.Nil {
+
+		slog.Error(err.Error())
+
+		return "none", nil
+
+	} else if err != nil {
 
 		slog.Error(err.Error())
 
 		return "", fmt.Errorf("%s", "Error reading key of redis-store")
 
-	}
+	} else {
 
-	return val, nil
+		return val, nil
+
+	}
 
 }
