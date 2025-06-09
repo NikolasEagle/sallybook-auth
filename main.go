@@ -272,6 +272,30 @@ func main() {
 
 	app.Post("/logout", func(c *fiber.Ctx) error {
 
+		sess, err := store.Get(c)
+
+		if err != nil {
+
+			slog.Error("Error initialization session storage")
+
+			c.Status(502).SendString("Error data processing")
+
+			return err
+
+		}
+
+		err = sess.Destroy()
+
+		if err != nil {
+
+			slog.Error("Error destroying session storage")
+
+			c.Status(502).SendString("Error data processing")
+
+			return err
+
+		}
+
 		return nil
 
 	})
