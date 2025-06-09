@@ -65,3 +65,27 @@ func CheckConnection() error {
 	return nil
 
 }
+
+func GetValue(key string) (string, error) {
+
+	err := CheckConnection()
+
+	if err != nil {
+
+		return "", err
+
+	}
+
+	val, err := Client.Get(ctx, key).Result()
+
+	if err == redis.Nil || err != nil {
+
+		slog.Error(err.Error())
+
+		return "", fmt.Errorf("%s", "Error reading key of redis-store")
+
+	}
+
+	return val, nil
+
+}
