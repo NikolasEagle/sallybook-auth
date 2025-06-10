@@ -6,6 +6,7 @@ require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/emersion/go-msgauth v0.7.0 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/gofiber/fiber/v2 v2.52.8 // indirect
 	github.com/gofiber/storage/redis/v2 v2.0.3 // indirect
