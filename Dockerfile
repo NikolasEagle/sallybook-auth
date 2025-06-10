@@ -1,14 +1,18 @@
-FROM golang:1.24
+FROM golang:1.24-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY funcs structs main.go ./
+COPY funcs ./funcs
+
+COPY structs ./structs
+
+COPY main.go ./
+
+RUN go build -o ./bin/app .
 
 EXPOSE 8001
 
-RUN go build -v -o /usr/local/bin/app ./..
-
-CMD [ "app" ]
+CMD [ "./bin/app" ]
