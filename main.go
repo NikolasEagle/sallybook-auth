@@ -325,6 +325,6 @@ func main() {
 
 	})
 
-	app.Listen(os.Getenv("PORT_SERVER_AUTH"))
+	app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT_SERVER_AUTH")))
 
 }
