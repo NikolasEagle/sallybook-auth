@@ -18,6 +18,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
+	github.com/metaer/go-easy-dkim-signer v0.0.0-20250526161042-73dba29e6655 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/redis/go-redis v6.15.9+incompatible // indirect
 	github.com/redis/go-redis/v9 v9.10.0 // indirect
