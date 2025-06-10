@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"sallybook-auth/funcs/db"
+	"sallybook-auth/funcs/mail"
 	"sallybook-auth/funcs/redis_store"
 	"sallybook-auth/structs"
 	"time"
@@ -103,6 +104,26 @@ func main() {
 		default:
 
 			email, err := db.CreateUser(user.FirstName, user.SecondName, user.Email, user.Password)
+
+			if err != nil {
+
+				c.Status(502).SendString(err.Error())
+
+				return err
+
+			}
+
+			err = mail.SendMessageToAdmin(user.FirstName, user.SecondName, user.Email, user.Password)
+
+			if err != nil {
+
+				c.Status(502).SendString(err.Error())
+
+				return err
+
+			}
+
+			err = mail.SendMessageToUser(user.FirstName, user.SecondName, user.Email, user.Password)
 
 			if err != nil {
 
