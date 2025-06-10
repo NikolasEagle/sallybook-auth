@@ -91,3 +91,62 @@ func SendMessageToAdmin(first_name, second_name, email, password string) error {
 	return nil
 
 }
+
+func SendMessageToUser(first_name, second_name, email, password string) error {
+
+	message := gomail.NewMessage()
+
+	message.SetHeader("From", fmt.Sprintf("MouseBook <%s>", smtpUser))
+
+	message.SetHeader("To", email)
+
+	message.SetHeader("Subject", "Поздравляю с регистрацией в сервисе MouseBook")
+
+	message.SetBody("text/html", fmt.Sprintf(`
+	
+		<h1>Данные для входа</h1>
+
+        <p><b>Email:%s</p>
+        <p><b>Пароль:</b> %s</p>
+	
+	`, email, password))
+
+	var buffer bytes.Buffer
+
+	_, err := message.WriteTo(&buffer)
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return fmt.Errorf("%s", "Error converting data mail message")
+
+	}
+
+	var signedMessage []byte
+
+	signedMessage, err = easydkim.Sign(buffer.Bytes(), dkimPrivateFileKey, dkimSelector, domain)
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return fmt.Errorf("%s", "Error signing data mail message")
+
+	}
+
+	auth := smtp.PlainAuth("", smtpUser, smtpPassword, smtpHost)
+
+	err = smtp.SendMail(fmt.Sprintf("%s:%s", smtpHost, smtpPort), auth, smtpUser, []string{email}, signedMessage)
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return fmt.Errorf("%s", "Error sending mail message")
+
+	}
+
+	return nil
+
+}
