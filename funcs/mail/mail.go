@@ -1,10 +1,14 @@
 package mail
 
 import (
+	"bytes"
 	"fmt"
+	"log/slog"
+	"net/smtp"
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/metaer/go-easy-dkim-signer/easydkim"
 	"gopkg.in/gomail.v2"
 )
 
@@ -20,9 +24,15 @@ var (
 	smtpPassword = os.Getenv("SMTP_PASSWORD")
 
 	smtpRecipient = os.Getenv("SMTP_RECIPIENT")
+
+	domain = os.Getenv("DOMAIN")
+
+	dkimSelector = os.Getenv("DKIM_SELECTOR")
+
+	dkimPrivateFileKey = os.Getenv("DKIM_PRIVATE_FILE_KEY")
 )
 
-func SendMessageToAdmin(first_name, second_name, email, password string) {
+func SendMessageToAdmin(first_name, second_name, email, password string) error {
 
 	message := gomail.NewMessage()
 
@@ -41,5 +51,43 @@ func SendMessageToAdmin(first_name, second_name, email, password string) {
         <p><b>Password:</b> %s</p>
 	
 	`, first_name, second_name, email, password))
+
+	var buffer bytes.Buffer
+
+	_, err := message.WriteTo(&buffer)
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return fmt.Errorf("%s", "Error converting data mail message")
+
+	}
+
+	var signedMessage []byte
+
+	signedMessage, err = easydkim.Sign(buffer.Bytes(), dkimPrivateFileKey, dkimSelector, domain)
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return fmt.Errorf("%s", "Error signing data mail message")
+
+	}
+
+	auth := smtp.PlainAuth("", smtpUser, smtpPassword, smtpHost)
+
+	err = smtp.SendMail(fmt.Sprintf("%s:%s", smtpHost, smtpPort), auth, smtpUser, []string{smtpRecipient}, signedMessage)
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return fmt.Errorf("%s", "Error sending mail message")
+
+	}
+
+	return nil
 
 }
