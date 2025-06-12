@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/fiber/v2/utils"
 	"github.com/joho/godotenv"
@@ -21,6 +22,11 @@ var _ = godotenv.Load()
 func main() {
 
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: fmt.Sprintf("http://%s:%s", os.Getenv("HOST"), os.Getenv("PORT")),
+		AllowCredentials: true,
+	}))
 
 	storage := redis_store.Store
 
