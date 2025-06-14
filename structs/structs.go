@@ -1,7 +1,7 @@
 package structs
 
 type User struct {
-	Id string
+	Id string `json:"-"`
 
 	FirstName string `form:"first_name" json:"first_name"`
 
@@ -9,9 +9,9 @@ type User struct {
 
 	Email string `form:"email" json:"email"`
 
-	Password string `form:"password"`
+	Password string `form:"password" json:"-"`
 
-	Hash string
+	Hash string `json:"-"`
 }
 
 type SessionStore struct {
