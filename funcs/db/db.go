@@ -231,3 +231,7 @@ func CheckPassword(email, password string) (bool, error) {
 	return correctPassword, nil
 
 }
+
+func GetUserInfo(email string) (*structs.User, error) {
+	return nil, nil
+}
