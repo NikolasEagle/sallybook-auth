@@ -252,7 +252,7 @@ func GetUserInfo(email string) (*structs.User, error) {
 
 	defer db.Close()
 
-	query := fmt.Sprintf("SELECT first_name, secon_name FROM users WHERE email='%s'", email)
+	query := fmt.Sprintf("SELECT first_name, second_name FROM users WHERE email='%s'", email)
 
 	rows, err := db.Query(query)
 
