@@ -308,13 +308,19 @@ func main() {
 
 			user := new(structs.User)
 
+			user.FirstName = fmt.Sprintf("%s", sess.Get("first_name"))
+
+			user.SecondName = fmt.Sprintf("%s", sess.Get("second_name"))
+
+			user.Email = fmt.Sprintf("%s", sess.Get("email"))
+
 			jsonData, _ := json.Marshal(user)
 
-			msg := fmt.Sprintf("Email %s was successfuly login", sess.Get("email"))
+			msg := fmt.Sprintf("Email %s was successfuly login", user.Email)
 
 			slog.Info(msg)
 
-			c.Status(200).JSON(jsonData)
+			c.Status(200).JSON(string(jsonData))
 
 			return nil
 
