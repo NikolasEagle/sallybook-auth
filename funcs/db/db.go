@@ -233,5 +233,59 @@ func CheckPassword(email, password string) (bool, error) {
 }
 
 func GetUserInfo(email string) (*structs.User, error) {
-	return nil, nil
+
+	_, err := CheckConnection()
+
+	if err != nil {
+
+		return nil, err
+
+	}
+
+	db, err := OpenConnection()
+
+	if err != nil {
+
+		return nil, err
+
+	}
+
+	defer db.Close()
+
+	query := fmt.Sprintf("SELECT first_name, secon_name FROM users WHERE email='%s'", email)
+
+	rows, err := db.Query(query)
+
+	if err != nil {
+
+		slog.Error(err.Error())
+
+		return nil, fmt.Errorf("%s", "Error selecting data from database")
+
+	}
+
+	defer rows.Close()
+
+	users := []structs.User{}
+
+	for rows.Next() {
+
+		user := structs.User{}
+
+		err := rows.Scan(&user.FirstName, &user.SecondName)
+
+		if err != nil {
+
+			slog.Error(err.Error())
+
+			continue
+
+		}
+
+		users = append(users, user)
+
+	}
+
+	return &users[0], nil
+	
 }
