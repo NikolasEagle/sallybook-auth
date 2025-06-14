@@ -205,9 +205,25 @@ func main() {
 
 			if correctPassword {
 
+				userInfo, err := db.GetUserInfo(user.Email)
+
+				if err != nil {
+
+					slog.Error(fmt.Sprintf("Error saving session for %s", user.Email))
+
+					c.Status(502).SendString("Error creating session")
+
+					return err
+
+				}
+
 				sess.Set("email", user.Email)
 
-				err := sess.Save()
+				sess.Set("first_name", userInfo.FirstName)
+
+				sess.Set("second_name", userInfo.SecondName)
+
+				err = sess.Save()
 
 				if err != nil {
 
