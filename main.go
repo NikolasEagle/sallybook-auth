@@ -279,7 +279,7 @@ func main() {
 
 		case "none":
 
-			msg := fmt.Sprintf("Email %s wasn't login", sess.Get("email"))
+			msg := "Current email wasn't login"
 
 			slog.Error(msg)
 
