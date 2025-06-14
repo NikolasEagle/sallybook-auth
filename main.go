@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"os"
@@ -305,11 +306,15 @@ func main() {
 
 		default:
 
+			user := new(structs.User)
+
+			jsonData, _ := json.Marshal(user)
+
 			msg := fmt.Sprintf("Email %s was successfuly login", sess.Get("email"))
 
 			slog.Info(msg)
 
-			c.Status(200).SendString(msg)
+			c.Status(200).JSON(jsonData)
 
 			return nil
 
