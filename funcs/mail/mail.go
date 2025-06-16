@@ -47,7 +47,7 @@ func SendMessageToAdmin(first_name, second_name, email, password string) error {
 		<h1>NEW USER</h1>
         <p>Name: %s</p>
         <p>Surname: %s</p>
-        <p><b>Email:%s</p>
+        <p><b>Email:</b> %s</p>
         <p><b>Password:</b> %s</p>
 	
 	`, first_name, second_name, email, password))
@@ -106,7 +106,7 @@ func SendMessageToUser(first_name, second_name, email, password string) error {
 	
 		<h1>Данные для входа</h1>
 
-        <p><b>Email:%s</p>
+        <p><b>Email:</b> %s</p>
         <p><b>Пароль:</b> %s</p>
 	
 	`, email, password))
