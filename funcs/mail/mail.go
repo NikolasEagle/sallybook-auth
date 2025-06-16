@@ -21,7 +21,7 @@ var (
 
 	smtpUser = os.Getenv("SMTP_USER")
 
-	smtpPassword = os.Getenv("SMTP_PASSWORD")
+	/*smtpPassword = os.Getenv("SMTP_PASSWORD")*/
 
 	smtpRecipient = os.Getenv("SMTP_RECIPIENT")
 
@@ -76,9 +76,9 @@ func SendMessageToAdmin(first_name, second_name, email, password string) error {
 
 	}
 
-	auth := smtp.PlainAuth("", smtpUser, smtpPassword, smtpHost)
+	/*auth := smtp.PlainAuth("", smtpUser, smtpPassword, smtpHost)*/
 
-	err = smtp.SendMail(fmt.Sprintf("%s:%s", smtpHost, smtpPort), auth, smtpUser, []string{smtpRecipient}, signedMessage)
+	err = smtp.SendMail(fmt.Sprintf("%s:%s", smtpHost, smtpPort), nil, smtpUser, []string{smtpRecipient}, signedMessage)
 
 	if err != nil {
 
@@ -135,9 +135,9 @@ func SendMessageToUser(first_name, second_name, email, password string) error {
 
 	}
 
-	auth := smtp.PlainAuth("", smtpUser, smtpPassword, smtpHost)
+	/*auth := smtp.PlainAuth("", smtpUser, smtpPassword, smtpHost)*/
 
-	err = smtp.SendMail(fmt.Sprintf("%s:%s", smtpHost, smtpPort), auth, smtpUser, []string{email}, signedMessage)
+	err = smtp.SendMail(fmt.Sprintf("%s:%s", smtpHost, smtpPort), nil, smtpUser, []string{email}, signedMessage)
 
 	if err != nil {
 
